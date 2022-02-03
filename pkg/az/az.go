@@ -66,6 +66,13 @@ func Query(t *Target) {
 	}
 
 	data, _ := ioutil.ReadAll(res.Body)
-	fmt.Print(string(data))
+
 	res.Body.Close()
+
+	// If response contains AADSTS50034, user does not exist in AD environment
+	if strings.Contains(string(data), "AADSTS50034") {
+		fmt.Println("[-] User Does Not Exist")
+	} else {
+		fmt.Println("[+] " + t.User + " exists")
+	}
 }
