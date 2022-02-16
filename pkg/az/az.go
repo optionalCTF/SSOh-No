@@ -75,11 +75,11 @@ func Query(t *Target) {
 		fmt.Println(Green("[+] Email Exists: " + t.User + " \n\r[+] Password Accepted: " + t.Password))
 	} else if strings.Contains(string(data), "AADSTS50034") {
 		fmt.Println(Red("[-] " + t.User + " does not exist"))
-	} else if strings.Contains(string(data), "AADSTS50126") {
+	} else if strings.Contains(string(data), "AADSTS50126") && t.Password != "test" {
 		fmt.Println(Green("[+] " + t.User + " exists"))
 		fmt.Println(Red("[-] Password Incorrect"))
 	} else {
-		fmt.Println("[+] " + t.User + " exists")
+		fmt.Println(Green("[+] " + t.User + " exists"))
 	}
 
 }

@@ -51,6 +51,18 @@ func main() {
 			Password: password.value,
 		}
 		az.Query(&target)
+	} else if email.set {
+		target := az.Target{
+			User:     email.value,
+			Domain:   strings.Split(email.value, "@")[1],
+			Guid:     uuid.New().String(),
+			Password: "test",
+		}
+		az.Query(&target)
+	} else {
+		if !email.set && !password.set {
+			flag.Usage()
+		}
 	}
 
 }
