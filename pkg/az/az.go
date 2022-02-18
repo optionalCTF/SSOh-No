@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	. "github.com/logrusorgru/aurora/v3"
+	colour "github.com/logrusorgru/aurora/v3"
 )
 
 type Target struct {
@@ -72,14 +72,14 @@ func Query(t *Target) {
 
 	// If response contains AADSTS50034, user does not exist in AD environment
 	if strings.Contains(string(data), "DesktopSsoToken") {
-		fmt.Println(Green("[+] Email Exists: " + t.User + " \n\r[+] Password Accepted: " + t.Password))
+		fmt.Println(colour.Green("[+] Email Exists: " + t.User + " \n\r[+] Password Accepted: " + t.Password))
 	} else if strings.Contains(string(data), "AADSTS50034") {
-		fmt.Println(Red("[-] " + t.User + " does not exist"))
+		fmt.Println(colour.Red("[-] " + t.User + " does not exist"))
 	} else if strings.Contains(string(data), "AADSTS50126") && t.Password != "test" {
-		fmt.Println(Green("[+] " + t.User + " exists"))
-		fmt.Println(Red("[-] Password Incorrect"))
+		fmt.Println(colour.Green("[+] " + t.User + " exists"))
+		fmt.Println(colour.Red("[-] Password Incorrect"))
 	} else {
-		fmt.Println(Green("[+] " + t.User + " exists"))
+		fmt.Println(colour.Green("[+] " + t.User + " exists"))
 	}
 
 }
