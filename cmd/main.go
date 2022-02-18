@@ -7,7 +7,7 @@ import (
 
 	"github.com/akamensky/argparse"
 	"github.com/google/uuid"
-	"github.com/optionalCTF/AzAutoLogon/pkg/az"
+	"github.com/optionalCTF/SSOh-no/pkg/az"
 )
 
 /*

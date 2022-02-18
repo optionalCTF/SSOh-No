@@ -1,4 +1,4 @@
-module github.com/optionalCTF/AzAutoLogon
+module github.com/optionalCTF/SSOh-no
 
 go 1.13
 
