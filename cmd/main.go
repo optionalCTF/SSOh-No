@@ -1,9 +1,11 @@
 package main
 
 import (
-	"flag"
+	"fmt"
+	"os"
 	"strings"
 
+	"github.com/akamensky/argparse"
 	"github.com/google/uuid"
 	"github.com/optionalCTF/AzAutoLogon/pkg/az"
 )
@@ -15,54 +17,39 @@ Inspiration posts:
 - Error codes (https://docs.microsoft.com/en-us/azure/active-directory/develop/reference-aadsts-error-codes#aadsts-error-codes)
 */
 
-type Flag struct {
-	set   bool
-	value string
-}
-
-var (
-	email    Flag
-	password Flag
-)
-
-func (fl *Flag) Set(x string) error {
-	fl.value = x
-	fl.set = true
-	return nil
-}
-
-func (fl *Flag) String() string {
-	return fl.value
-}
-
 func init() {
-	flag.Var(&email, "email", "Example: user@domain.com")
-	flag.Var(&password, "password", "Example: Password123!")
-}
 
-func main() {
-	flag.Parse()
+	parser := argparse.NewParser("SSOh-No", "Enumerate and abuse a sub-par Azure SSO endpoint.")
 
-	if email.set && password.set {
+	email := parser.String("e", "email", &argparse.Options{Required: false, Help: "Email address to query. Example: user@domain.com"})
+	password := parser.String("p", "password", &argparse.Options{Required: false, Help: "Password to spray. Example: Password123!"})
+
+	err := parser.Parse(os.Args)
+	if err != nil {
+		fmt.Print(parser.Usage(err))
+	}
+
+	if *email != "" && *password != "" {
 		target := az.Target{
-			User:     email.value,
-			Domain:   strings.Split(email.value, "@")[1],
+			User:     *email,
+			Domain:   strings.Split(*email, "@")[1],
 			Guid:     uuid.New().String(),
-			Password: password.value,
+			Password: *password,
 		}
 		az.Query(&target)
-	} else if email.set {
+	} else if *email != "" {
 		target := az.Target{
-			User:     email.value,
-			Domain:   strings.Split(email.value, "@")[1],
+			User:     *email,
+			Domain:   strings.Split(*email, "@")[1],
 			Guid:     uuid.New().String(),
-			Password: "test",
+			Password: *password,
 		}
 		az.Query(&target)
 	} else {
-		if !email.set && !password.set {
-			flag.Usage()
-		}
+		fmt.Print(parser.Usage(err))
 	}
+}
+
+func main() {
 
 }
