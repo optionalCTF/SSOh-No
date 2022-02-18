@@ -28,12 +28,13 @@ func init() {
 	if err != nil {
 		fmt.Print(parser.Usage(err))
 	}
+	target := az.Target{}
+	target.Guid = uuid.New().String()
 
 	if *email != "" && *password != "" {
 		target := az.Target{
 			User:     *email,
 			Domain:   strings.Split(*email, "@")[1],
-			Guid:     uuid.New().String(),
 			Password: *password,
 		}
 		az.Query(&target)
@@ -41,7 +42,6 @@ func init() {
 		target := az.Target{
 			User:     *email,
 			Domain:   strings.Split(*email, "@")[1],
-			Guid:     uuid.New().String(),
 			Password: *password,
 		}
 		az.Query(&target)
