@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/akamensky/argparse"
-	"github.com/google/uuid"
 	"github.com/optionalCTF/SSOh-no/pkg/az"
+	service "github.com/optionalCTF/SSOh-no/pkg/svc"
 )
 
 /*
@@ -23,28 +23,25 @@ func init() {
 
 	email := parser.String("e", "email", &argparse.Options{Required: false, Help: "Email address to query. Example: user@domain.com"})
 	password := parser.String("p", "password", &argparse.Options{Required: false, Help: "Password to spray. Example: Password123!"})
+	userList := parser.String("U", "Userlist", &argparse.Options{Required: false, Help: "Specify userlist to enumerate"})
 
 	err := parser.Parse(os.Args)
 	if err != nil {
 		fmt.Print(parser.Usage(err))
 	}
-	target := az.Target{}
-	target.Guid = uuid.New().String()
 
 	if *email != "" && *password != "" {
-		target := az.Target{
-			User:     *email,
-			Domain:   strings.Split(*email, "@")[1],
-			Password: *password,
-		}
-		az.Query(&target)
+		az.Query(*email, strings.Split(*email, "@")[1], *password)
 	} else if *email != "" {
-		target := az.Target{
-			User:     *email,
-			Domain:   strings.Split(*email, "@")[1],
-			Password: *password,
+		az.Query(*email, strings.Split(*email, "@")[1], "")
+	} else if *userList != "" {
+		users, err := service.ReadFile(*userList)
+		if err != nil {
+			fmt.Printf("readLines: %s", err)
 		}
-		az.Query(&target)
+		for _, line := range users {
+			az.Query(line, strings.Split(line, "@")[1], "")
+		}
 	} else {
 		fmt.Print(parser.Usage(err))
 	}

