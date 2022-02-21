@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/akamensky/argparse"
 	"github.com/optionalCTF/SSOh-no/pkg/az"
@@ -40,8 +41,9 @@ func init() {
 			fmt.Printf("readLines: %s", err)
 		}
 		for _, line := range users {
-			az.Query(line, strings.Split(line, "@")[1], "")
+			go az.Query(line, strings.Split(line, "@")[1], "")
 		}
+		time.Sleep(2 * time.Second)
 	} else {
 		fmt.Print(parser.Usage(err))
 	}
