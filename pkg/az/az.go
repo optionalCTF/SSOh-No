@@ -78,6 +78,8 @@ func Query(user string, domain string, password string) {
 	res.Body.Close()
 
 	// Filtering based on AADSTS numbers within data response
+	// Maybe for seamless usage with userList return data body?
+	// Comparisons then happen within specific functions?
 
 	if strings.Contains(string(data), "DesktopSsoToken") {
 		fmt.Println(colour.Green("[+] Email Exists: " + user + " \n\r[+] Password Accepted: " + password))
