@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"time"
+	"sync"
 
 	"github.com/akamensky/argparse"
 	"github.com/optionalCTF/SSOh-no/pkg/az"
@@ -26,24 +26,27 @@ func init() {
 	password := parser.String("p", "password", &argparse.Options{Required: false, Help: "Password to spray. Example: Password123!"})
 	userList := parser.String("U", "Userlist", &argparse.Options{Required: false, Help: "Specify userlist to enumerate"})
 
+	var wg sync.WaitGroup
+
 	err := parser.Parse(os.Args)
 	if err != nil {
 		fmt.Print(parser.Usage(err))
 	}
 
 	if *email != "" && *password != "" {
-		az.Query(*email, strings.Split(*email, "@")[1], *password)
+		az.Query(*email, strings.Split(*email, "@")[1], *password, &wg)
 	} else if *email != "" {
-		az.Query(*email, strings.Split(*email, "@")[1], "")
+		az.Query(*email, strings.Split(*email, "@")[1], "", &wg)
 	} else if *userList != "" {
 		users, err := service.ReadFile(*userList)
 		if err != nil {
 			fmt.Printf("readLines: %s", err)
 		}
+		wg.Add(len(users))
 		for _, line := range users {
-			go az.Query(line, strings.Split(line, "@")[1], "")
+			go az.Query(line, strings.Split(line, "@")[1], "", &wg)
 		}
-		time.Sleep(2 * time.Second)
+		wg.Wait()
 	} else {
 		fmt.Print(parser.Usage(err))
 	}

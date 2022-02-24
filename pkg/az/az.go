@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -25,7 +26,7 @@ func AzClient() {
 
 }
 
-func Query(user string, domain string, password string) {
+func Query(user string, domain string, password string, wg *sync.WaitGroup) {
 	tar := "https://autologon.microsoftazuread-sso.com/" + domain + "/winauth/trust/2005/usernamemixed?client-request-id=" + uuid.New().String()
 	// This is disgusting, look at better solution?
 	var body = strings.NewReader(`<?xml version="1.0" encoding="UTF-8"?>
@@ -91,5 +92,5 @@ func Query(user string, domain string, password string) {
 	} else {
 		fmt.Println(colour.Green("[+] " + user + " exists"))
 	}
-
+	defer wg.Done()
 }
