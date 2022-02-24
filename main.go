@@ -45,7 +45,6 @@ func init() {
 		if err != nil {
 			fmt.Printf("readLines: %s", err)
 		}
-		wg.Add(len(users))
 		for _, line := range users {
 			go az.Query(line, strings.Split(line, "@")[1], *password, &wg)
 		}
