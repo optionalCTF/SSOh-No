@@ -25,19 +25,14 @@ func init() {
 	email := parser.String("e", "email", &argparse.Options{Required: false, Help: "Email address to query. Example: user@domain.com"})
 	password := parser.String("p", "password", &argparse.Options{Required: false, Help: "Password to spray. Example: Password123!"})
 	userList := parser.String("U", "userlist", &argparse.Options{Required: false, Help: "Specify userlist to enumerate"})
-	threading := parser.Int("t", "threads", &argparse.Options{Required: false, Help: "Specify threads to run (Default 64)"})
 
 	var wg sync.WaitGroup
-	if *threading != 0 {
-		wg.Add(*threading)
-	} else {
-		wg.Add(64)
-	}
 
 	err := parser.Parse(os.Args)
 	if err != nil {
 		fmt.Print(parser.Usage(err))
 	}
+
 	if *email != "" {
 		az.Query(*email, strings.Split(*email, "@")[1], *password, &wg)
 	} else if *userList != "" {
@@ -47,6 +42,7 @@ func init() {
 		}
 		for _, line := range users {
 			go az.Query(line, strings.Split(line, "@")[1], *password, &wg)
+			wg.Add(1)
 		}
 		wg.Wait()
 	} else {

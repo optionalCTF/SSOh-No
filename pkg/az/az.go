@@ -12,16 +12,6 @@ import (
 	colour "github.com/logrusorgru/aurora/v3"
 )
 
-// This whole stucture can likely be changed/removed for later features e.g proxying
-/*
-type Target struct {
-	User     string
-	Domain   string
-	Guid     string
-	Password string
-}
-*/
-
 func AzClient() {
 
 }
@@ -63,6 +53,7 @@ func Query(user string, domain string, password string, wg *sync.WaitGroup) {
 	</s:Envelope>
 	`)
 
+	defer wg.Done()
 	req, err := http.NewRequest("POST", tar, body)
 
 	if err != nil {
@@ -92,5 +83,4 @@ func Query(user string, domain string, password string, wg *sync.WaitGroup) {
 	} else {
 		fmt.Println(colour.Green("[+] " + user + " exists"))
 	}
-	defer wg.Done()
 }
