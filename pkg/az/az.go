@@ -12,10 +12,6 @@ import (
 	colour "github.com/logrusorgru/aurora/v3"
 )
 
-func AzClient() {
-
-}
-
 func Query(user string, domain string, password string, wg *sync.WaitGroup) {
 	tar := "https://autologon.microsoftazuread-sso.com/" + domain + "/winauth/trust/2005/usernamemixed?client-request-id=" + uuid.New().String()
 	// This is disgusting, look at better solution?
@@ -70,8 +66,7 @@ func Query(user string, domain string, password string, wg *sync.WaitGroup) {
 	res.Body.Close()
 
 	// Filtering based on AADSTS numbers within data response
-	// Maybe for seamless usage with userList return data body?
-	// Comparisons then happen within specific functions?
+	// TODO modify this to work better with potential writefile functionality
 
 	if strings.Contains(string(data), "DesktopSsoToken") {
 		fmt.Println(colour.Green("[+] Email Exists: " + user + " \n\r[+] Password Accepted: " + password))
