@@ -1,8 +1,8 @@
 # SSOh-No 
 
-This tool is designed to enumerate users, password spray and perform brute force attacks against Azure AD via a seamless SSO autologon endpoint. 
+This tool is designed to enumerate users, password spray and perform brute force attacks against any orgnisation who utilises Azure AD or O365. 
 
-Generally, this endpoint provides extremely verbose errors which can be leveraged to enumerate users and validate their passwords via brute force/spraying attacks. 
+Generally, this endpoint provides extremely verbose errors which can be leveraged to enumerate users and validate their passwords via brute force/spraying attacks, while also failing to log any failed authentication attempts. 
 
 This tool is a weaponised version of a PoC demonstrated in the [arstechnica research article](https://arstechnica.com/information-technology/2021/09/new-azure-active-directory-password-brute-forcing-flaw-has-no-fix/]) which discusses the techniques utilised to exploit the endpoint.
 
