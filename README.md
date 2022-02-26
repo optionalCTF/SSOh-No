@@ -4,7 +4,7 @@ This tool is designed to enumerate users, password spray and perform brute force
 
 Generally, this endpoint provides extremely verbose errors which can be leveraged to enumerate users and validate their passwords via brute force/spraying attacks. 
 
-This tool is a weaponised version of a PoC demonstrated in the [arstechnica article research article](https://arstechnica.com/information-technology/2021/09/new-azure-active-directory-password-brute-forcing-flaw-has-no-fix/]) which discusses the techniques utilised to exploit the endpoint.
+This tool is a weaponised version of a PoC demonstrated in the [arstechnica research article](https://arstechnica.com/information-technology/2021/09/new-azure-active-directory-password-brute-forcing-flaw-has-no-fix/]) which discusses the techniques utilised to exploit the endpoint.
 
 This endpoint is known to Microsoft however, in typical fashion it has been branded a feature, not a bug.
 
