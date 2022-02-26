@@ -1,4 +1,4 @@
-# SSOh-no 
+# SSOh-No 
 
 This tool is designed to enumerate users, password spray and perform brute force attacks against Azure AD via a seamless SSO autologon endpoint. 
 
