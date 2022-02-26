@@ -34,7 +34,8 @@ func init() {
 	}
 
 	if *email != "" {
-		az.Query(*email, strings.Split(*email, "@")[1], *password, &wg)
+		go az.Query(*email, strings.Split(*email, "@")[1], *password, &wg)
+		wg.Add(1)
 	} else if *userList != "" {
 		users, err := service.ReadFile(*userList)
 		if err != nil {
@@ -48,6 +49,7 @@ func init() {
 	} else {
 		fmt.Print(parser.Usage(err))
 	}
+	wg.Wait()
 }
 
 func main() {
