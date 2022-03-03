@@ -2,6 +2,7 @@ package service
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 )
@@ -23,4 +24,35 @@ func ReadFile(path string) ([]string, error) {
 	}
 	scanErr := scanner.Err()
 	return lines, scanErr
+}
+
+func WriteFile(path string, contents string) error {
+	if _, err := os.Stat(path); err == nil {
+		f, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		if err != nil {
+			fmt.Printf("Error: %s", err)
+		}
+		defer f.Close()
+		if _, err := f.WriteString(contents + "\n"); err != nil {
+			fmt.Printf("Error: %s", err)
+
+		}
+		return nil
+
+	} else if errors.Is(err, os.ErrNotExist) {
+		file, err := os.Create(path)
+		if err != nil {
+			fmt.Printf("Error: %s", err)
+		}
+
+		defer file.Close()
+		w := bufio.NewWriter(file)
+		fmt.Fprintln(w, contents)
+
+		return w.Flush()
+	} else {
+		fmt.Printf("Schrodingers error... How did you do this?")
+		return nil
+	}
+
 }
