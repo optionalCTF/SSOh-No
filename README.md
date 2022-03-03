@@ -41,4 +41,3 @@ Arguments:
 
 - Proxy Implementation to bypass smart lock
 - Password brute force from password lists (single user- No plans for password list brute force against a userlist)
-- Output files for successful user enum/password spraying
