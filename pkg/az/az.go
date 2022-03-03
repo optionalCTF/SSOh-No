@@ -72,15 +72,21 @@ func Query(user string, domain string, password string, wg *sync.WaitGroup, outf
 	if strings.Contains(string(data), "DesktopSsoToken") {
 		fmt.Println(colour.Green("[+] Email Exists: " + user + " \n\r[+] Password Accepted: " + password))
 		userPass := user + ":" + password
-		service.WriteFile(outfile, userPass)
+		if outfile != "" {
+			service.WriteFile(outfile, userPass)
+		}
 	} else if strings.Contains(string(data), "AADSTS50034") {
 		fmt.Println(colour.Red("[-] " + user + " does not exist"))
 	} else if strings.Contains(string(data), "AADSTS50126") && password != "" {
 		fmt.Println(colour.Green("[+] " + user + " exists"))
-		service.WriteFile(outfile, user)
+		if outfile != "" {
+			service.WriteFile(outfile, user)
+		}
 		fmt.Println(colour.Red("[-] Password Incorrect"))
 	} else {
-		service.WriteFile(outfile, user)
+		if outfile != "" {
+			service.WriteFile(outfile, user)
+		}
 		fmt.Println(colour.Green("[+] " + user + " exists"))
 	}
 }
