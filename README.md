@@ -23,7 +23,7 @@ The following have been tested and contain no logs:
 ```
 $ ./SSOh-No -h
 usage: SSOh-No [-h|--help] [-e|--email "<value>"] [-p|--password "<value>"]
-               [-U|--userlist "<value>"]
+               [-U|--userlist "<value>"] [-o|--outfile "<value>"]
 
                Enumerate and abuse a sub-par Azure SSO endpoint.
 
@@ -33,6 +33,7 @@ Arguments:
   -e  --email     Email address to query. Example: user@domain.com
   -p  --password  Password to spray. Example: Password123!
   -U  --userlist  Specify userlist to enumerate
+  -o  --outfile   Specify outfile. Example: validated.txt
 ```
 
 
