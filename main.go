@@ -25,6 +25,7 @@ func init() {
 	email := parser.String("e", "email", &argparse.Options{Required: false, Help: "Email address to query. Example: user@domain.com"})
 	password := parser.String("p", "password", &argparse.Options{Required: false, Help: "Password to spray. Example: Password123!"})
 	userList := parser.String("U", "userlist", &argparse.Options{Required: false, Help: "Specify userlist to enumerate"})
+	outfile := parser.String("o", "outfile", &argparse.Options{Required: false, Help: "Specify outfile. Example: validated.txt"})
 
 	var wg sync.WaitGroup
 
@@ -34,7 +35,7 @@ func init() {
 	}
 
 	if *email != "" {
-		go az.Query(*email, strings.Split(*email, "@")[1], *password, &wg)
+		go az.Query(*email, strings.Split(*email, "@")[1], *password, &wg, *outfile)
 		wg.Add(1)
 	} else if *userList != "" {
 		users, err := service.ReadFile(*userList)
@@ -42,7 +43,7 @@ func init() {
 			fmt.Printf("readLines: %s", err)
 		}
 		for _, line := range users {
-			go az.Query(line, strings.Split(line, "@")[1], *password, &wg)
+			go az.Query(line, strings.Split(line, "@")[1], *password, &wg, *outfile)
 			wg.Add(1)
 		}
 		wg.Wait()

