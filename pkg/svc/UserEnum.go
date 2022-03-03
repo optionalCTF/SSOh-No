@@ -31,6 +31,7 @@ func WriteFile(path string, contents string) error {
 		f, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
 			fmt.Printf("Error: %s", err)
+			fmt.Printf("ree1")
 		}
 		defer f.Close()
 		if _, err := f.WriteString(contents + "\n"); err != nil {
@@ -43,6 +44,7 @@ func WriteFile(path string, contents string) error {
 		file, err := os.Create(path)
 		if err != nil {
 			fmt.Printf("Error: %s", err)
+			fmt.Printf("ree")
 		}
 
 		defer file.Close()
